@@ -1,0 +1,57 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CreateBookDto {
+  id: Float!
+  name: String!
+  genre: String!
+}
+
+type UpdateBookDto {
+  id: Float!
+  name: String!
+  genre: String!
+}
+
+type CreateAuthorDto {
+  id: Float!
+  name: String!
+  age: Float!
+}
+
+type Query {
+  books: [CreateBookDto!]!
+  book(id: Float!): CreateBookDto!
+  getAuthors: [CreateAuthorDto!]!
+  getAuthor(id: Float!): CreateAuthorDto!
+}
+
+type Mutation {
+  createBook(data: BookInput!): CreateBookDto!
+  updateBook(data: UpdateBook!, id: Float!): UpdateBookDto!
+  deleteBook(id: Float!): Boolean!
+  createAuthor(data: AuthorInput!): CreateAuthorDto!
+  updateAuthor(data: UpdateAuthor!, id: Float!): CreateAuthorDto!
+  deleteAuthor(id: Float!): Boolean!
+}
+
+input BookInput {
+  name: String!
+  genre: String!
+}
+
+input UpdateBook {
+  name: String
+  genre: String
+}
+
+input AuthorInput {
+  name: String!
+  age: Float!
+}
+
+input UpdateAuthor {
+  name: String
+  age: Float
+}
