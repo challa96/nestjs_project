@@ -1,18 +1,25 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ResolveField, Parent } from '@nestjs/graphql';
 import { CreateBookDto } from './models/create-book.model';
 import { UpdateBookDto } from './models/update-book.model';
 import { BookInput } from './inputs/book.input';
 import { UpdateBook } from './inputs/updateBook.input';
 import { BookEntity } from './books.entity';
 import { BookService } from './book.service';
+import { AuthorService } from 'src/authors/author.service';
 
-@Resolver(of=> BookEntity)
+@Resolver(of=> CreateBookDto)
 export class BookResolver{
-    constructor(private readonly bookService:BookService ) {}   
+    constructor(private readonly bookService:BookService, private readonly authorService:AuthorService ) {}   
 
     @Query(()=> [CreateBookDto])
     async books(){
         return  await this.bookService.getBooks();
+    }
+
+    @ResolveField()
+    async author(@Parent() books:CreateBookDto){
+        let { id } = books;
+        return await this.authorService.getAuthor(id);
     }
 
     @Query(()=> CreateBookDto)

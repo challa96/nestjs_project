@@ -8,4 +8,6 @@ export class UpdateBookDto{
         readonly name?:string
     @Field() 
         readonly genre?:string
+    @Field()
+        readonly authorId?:number
 }

@@ -2,19 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type CreateAuthorDto {
+  id: Float!
+  name: String!
+  age: Float!
+  getbooks: [CreateBookDto!]!
+}
+
 type CreateBookDto {
   id: Float!
   name: String!
   genre: String!
+  author: CreateAuthorDto!
 }
 
 type UpdateBookDto {
   id: Float!
   name: String!
   genre: String!
+  authorId: Float!
 }
 
-type CreateAuthorDto {
+type UpdateAuthorDto {
   id: Float!
   name: String!
   age: Float!
@@ -32,18 +41,20 @@ type Mutation {
   updateBook(data: UpdateBook!, id: Float!): UpdateBookDto!
   deleteBook(id: Float!): Boolean!
   createAuthor(data: AuthorInput!): CreateAuthorDto!
-  updateAuthor(data: UpdateAuthor!, id: Float!): CreateAuthorDto!
+  updateAuthor(data: UpdateAuthor!, id: Float!): UpdateAuthorDto!
   deleteAuthor(id: Float!): Boolean!
 }
 
 input BookInput {
   name: String!
   genre: String!
+  authorId: Float!
 }
 
 input UpdateBook {
   name: String
   genre: String
+  authorId: Float
 }
 
 input AuthorInput {

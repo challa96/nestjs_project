@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpCode, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorEntity } from './author.entity';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+
 
 @Injectable()
 
@@ -21,7 +22,7 @@ export class AuthorService{
     async updateAuthor(id,data){
         let author = await this.AuthorRepository.findOne({where: {id}});
         if(!author){
-            throw new Error("Author not found");
+            throw new InternalServerErrorException("Author not found");
         }
         Object.assign(author,data);
         return await this.AuthorRepository.save(author);
@@ -30,7 +31,7 @@ export class AuthorService{
     async deleteAuthor(id){
         let author = await this.AuthorRepository.findOne({where:{id}});
         if(!author){
-            throw new Error("Author not found");
+            throw new NotFoundException("Author not found");
         }
         await this.AuthorRepository.delete(id);
         return true;
@@ -41,9 +42,10 @@ export class AuthorService{
     }
 
     async getAuthor(id){
+        //let author = await this.AuthorRepository.findOne({where:{id}, relations:['books'] });
         let author = await this.AuthorRepository.findOne({where:{id}});
         if(!author){
-            throw new Error("Author not found");
+            throw new BadRequestException({status:500,message:"Author not found"});
         }
         return author;
     }

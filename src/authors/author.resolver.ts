@@ -1,23 +1,31 @@
-import { Resolver, Mutation, Query, Args, Subscription } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args, Subscription, ResolveField, Parent } from '@nestjs/graphql';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from "./dto/update-author.dto";
 import { AuthorInput } from "./inputs/author.input";
 import { UpdateAuthor } from "./inputs/updateAuthor.input";
 import { AuthorEntity } from "./author.entity";
+import { BookService } from 'src/books/book.service';
+import { CreateBookDto } from 'src/books/models/create-book.model';
 
 
-@Resolver((of)=>AuthorEntity)
+@Resolver((of)=> CreateAuthorDto)
 export class AutorResolver{
 
-    constructor(private readonly authorService:AuthorService){}
+    constructor(private readonly authorService:AuthorService, private readonly bookService:BookService){}
 
     @Mutation(()=>CreateAuthorDto)
     async createAuthor(@Args('data') data:AuthorInput){
         return await this.authorService.createAuthor(data);
     }
 
-    @Mutation(()=>CreateAuthorDto)
+    @ResolveField()
+    async getbooks(@Parent() author:CreateAuthorDto){
+        let  {id} = author;
+        return await this.bookService.getBookBasedOnAuthorId(id);
+    }
+
+    @Mutation(()=>UpdateAuthorDto)
     async updateAuthor(@Args('id') id:number, @Args('data') data:UpdateAuthor){
         return await this.authorService.updateAuthor(id,data);
     }
@@ -34,7 +42,7 @@ export class AutorResolver{
 
     @Query(()=> CreateAuthorDto)
     async getAuthor(@Args('id') id:number){
-        return await this.authorService.getAuthor(id);
+        return await this.authorService.getAuthor(id)
     }
 
 }

@@ -7,4 +7,10 @@ export class BookInput {
         readonly name:string
     @Field() 
         readonly genre:string
+
+    @Field()
+        readonly authorId: number;    
+        
+    /* @Field()
+        readonly authorId:number */
 }
