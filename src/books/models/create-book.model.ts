@@ -11,8 +11,8 @@ export class CreateBookDto{
     @Field() 
        readonly genre:string
 
-   //  @Field()
-   //    readonly authorId: number;   
+    @Field()
+      readonly authorId: number;   
      @Field(type=>CreateAuthorDto)
        readonly author?:CreateAuthorDto;
 

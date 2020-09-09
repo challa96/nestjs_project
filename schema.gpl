@@ -13,6 +13,7 @@ type CreateBookDto {
   id: Float!
   name: String!
   genre: String!
+  authorId: Float!
   author: CreateAuthorDto!
 }
 

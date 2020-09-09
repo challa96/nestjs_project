@@ -1,0 +1,3 @@
+[submodule "nestjs_graphql_typeorm_ex"]
+	path = nestjs_graphql_typeorm_ex
+	url = https://github.com/challa96/nestjs_project/

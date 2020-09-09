@@ -18,8 +18,8 @@ export class BookResolver{
 
     @ResolveField()
     async author(@Parent() books:CreateBookDto){
-        let { id } = books;
-        return await this.authorService.getAuthor(id);
+        let { authorId } = books;
+        return await this.authorService.getAuthor(authorId);
     }
 
     @Query(()=> CreateBookDto)
