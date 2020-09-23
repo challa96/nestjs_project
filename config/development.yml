@@ -1,0 +1,19 @@
+server:
+    port: 8080
+
+db:
+    type: 'postgres'
+    host: 'localhost'
+    port: 5432
+    username: 'postgres'
+    password: 'postgres'
+    database: 'test_live_db'
+    logging: false
+    synchronize: false
+    migration: true
+
+graphql:
+    playground: true
+
+jwt:
+    secret: 'Secret666'
