@@ -3,10 +3,11 @@ import { PrimaryGeneratedColumn, Column,Entity, OneToMany, ManyToOne} from 'type
 //import { UserDto } from '../dto/userdto';
 import { IsNotEmpty, MinLength, IsEmail, IsString, IsBoolean, IsDate } from 'class-validator';
 import { UserInput } from '../inputs/create.user-input';
+import * as config from 'config';
 
-
+const table_name = config.get('tables').table1;
 @Entity({
-    name:'users',
+    name:table_name,
     orderBy:{id:"ASC"}
 })
 @InputType('UserInput')

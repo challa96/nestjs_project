@@ -12,6 +12,10 @@ db:
     synchronize: false
     migration: true
 
+tables:
+    table1: 'users'
+    table2: 'admins'
+
 graphql:
     playground: true
 

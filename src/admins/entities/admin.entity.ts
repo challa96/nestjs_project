@@ -1,9 +1,63 @@
 import { Field, GraphQLISODateTime, HideField, InputType, Int, ObjectType, PartialType } from '@nestjs/graphql';
 import { PrimaryColumn, Column, Entity, OneToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IsArray, IsBoolean, IsDate, IsDateString, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
-import { AdminInput } from '../inputs/admin.input';
+import { IsArray, IsBoolean, IsDate, Validate ,IsEmail, IsEmpty, IsIn, IsJSON, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator';
+import { validate } from 'graphql';
+import * as config from 'config';
+import { JsonbValidation } from '../validations/admin-permission.validation';
+import { Type } from 'class-transformer';
+
+
+//const table_name = config.get('tables').table2;
+
+@ObjectType()
+@InputType('OptionsInput')
+export class Options{
+    // @ValidateNested({each:true})
+    @IsBoolean()
+    @IsNotEmpty()
+    @Field(type=>Boolean,{nullable:true})
+    read_only:boolean;
+
+    // @ValidateNested({each:true})
+    @IsOptional()
+    @IsString()
+    @Field({nullable:true})
+    country:string;
+
+    // @ValidateNested({each:true})
+    @IsOptional()
+    @IsArray()
+    @Field(type=>[Int],{nullable:true})
+    store_ids:[];
+} 
+
+@ObjectType('Orders')
+@InputType('OrdersInput')
+export class Orders{
+   @IsBoolean()
+   @IsNotEmpty()
+   @Field(type=>Boolean,{nullable:true})
+   active:boolean;
+
+   @ValidateNested()
+   @Type(()=> Options)
+   @IsJSON()
+   @Field(tyep=>Options,{nullable:true})
+   options:Options;
+}
+
+@ObjectType()
+@InputType('AdminPermissionInput')
+export class AdminPermissions{
+    @ValidateNested()
+    @Type(()=> Orders)
+    @IsJSON()
+    @Field(type => Orders,{nullable:true} )
+    orders:Orders;
+}
 
 @Entity({
+    //name:table_name,
     name:'admins',
     orderBy:{id:'ASC'}
 })
@@ -112,13 +166,15 @@ export class Admin{
     superadmin:boolean;
 
     @IsOptional()
+    @ValidateNested()
+    @Type(()=>AdminPermissions)
     @Field(type=>AdminPermissions,{nullable:true})
     @Column({
         name:'permissions',
         type:'jsonb',
         nullable:true
     })
-    permissions:AdminPermissions[]; 
+    permissions:AdminPermissions; 
    
     @IsOptional()
     @IsArray()
@@ -132,42 +188,7 @@ export class Admin{
     })
     cities_area_ids:[]; 
 }
- 
-@ObjectType()
-@InputType('AdminPermissionInput')
-export class AdminPermissions{
-    @Field(type => Orders )
-    orders:Orders[];
-}
- 
-
-
- @ObjectType()
- @InputType('OrdersInput')
-export class Orders{
-    @Field(type=>Boolean,{nullable:true})
-    active:boolean;
-
-    @Field(tyep=>Options,{nullable:true})
-    options:Options[];
-}
-
-
-
-@ObjectType()
-@InputType('OptionsInput')
-export class Options{
-    @Field(type=>Boolean,{nullable:true})
-    read_only:boolean;
-
-    @Field({nullable:true})
-    country:string;
-
-    @Field(type=>[Int],{nullable:true})
-    srore_ids:[];
-} 
 
 
 @InputType('UpdateAdminInput')
 export class UpdateAdminInput extends PartialType(Admin, InputType){}
-
